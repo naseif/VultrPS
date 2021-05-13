@@ -12,7 +12,6 @@ function Remove-VULTRInstance {
     process {
         $data = @{}
         
-        $instance = Invoke-VULTRAPI -ApiEndPoint "instances/$instanceId" -Data $data -method "DELETE"
-        $instance.instance
+        Invoke-VULTRAPI -ApiEndPoint "instances/$instanceId" -Data $data -method "DELETE"
     }
 }
