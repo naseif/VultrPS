@@ -1,7 +1,9 @@
 Describe 'APIKeyManagement' {
-	Remove-Module VultrPS*; Import-Module $PSScriptRoot/../../VultrPS
 
-    Remove-VULTRAPIKey
+    BeforeAll {
+        Remove-Module VultrPS*; Import-Module $PSScriptRoot/../../VultrPS
+        Remove-VULTRAPIKey
+    }
 
     Context 'without a key Get-VULTRAPIKey' {
         it 'throws an exception' {

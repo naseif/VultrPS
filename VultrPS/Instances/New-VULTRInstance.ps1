@@ -5,14 +5,10 @@ function New-VULTRInstance {
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory = $true)]
-        [string]$ApiKey,
-        [Parameter()]
         [string]$Region = "ams",
-        [Parameter()]
         [string]$Plan = "vc2-4c-8gb",
-        [Parameter()]
-        [string]$OsId = "387"
+        [string]$OsId = "387",
+        [Switch]$WaitForResponsiveness
     )
 
     
@@ -23,7 +19,13 @@ function New-VULTRInstance {
             os_id  = $OsId
         }
         
-        $instance = Invoke-VULTRAPI -ApiKey $apikey -ApiEndPoint "instances" -Data $data
+        $instance = Invoke-VULTRAPI -ApiEndPoint "instances" -Data $data
+
+        Write-Host " - $(Get-Date) instance $($instance.instance.id) created..."
+        if ( $WaitForResponsiveness ) {
+            Wait-VULTRInstanceReady $instance.instance.id
+        }
+
         $instance.instance
     }
 }
