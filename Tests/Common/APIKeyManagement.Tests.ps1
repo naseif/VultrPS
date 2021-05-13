@@ -20,6 +20,6 @@ Describe 'APIKeyManagement' {
         it 'throws an exception again' {
             Remove-VULTRAPIKey
             { Get-VULTRAPIKey } | Should -Throw "*You don't have an API key stored yet*"
-        }   
+        }
     }
 }
