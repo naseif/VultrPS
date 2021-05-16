@@ -7,17 +7,17 @@ function New-VULTRInstance {
     param (
         [string]$Region = "ams",
         [string]$Plan = "vc2-4c-8gb",
-    	[ArgumentCompleter({
-	        param( $CommandName, $ParameterName, $WordToComplete, $CommandAst, $FakeBoundParameters )
-            $temp = $WordToComplete.Replace('"', '')
-            (Get-VULTROperatingSystem) | 
+        [ArgumentCompleter( {
+                param( $CommandName, $ParameterName, $WordToComplete, $CommandAst, $FakeBoundParameters )
+                $temp = $WordToComplete.Replace('"', '')
+                (Get-VULTROperatingSystem) | 
                 Where-Object Name -like "*$temp*" | 
                 Foreach-Object {
                     $os = $_.Name
                     '"' + $os + '"'
                 }
-        })]
-        [ValidateScript({((Get-VULTROperatingSystem) | Where-Object Name -eq $_)})]
+            })]
+        [ValidateScript( { ((Get-VULTROperatingSystem) | Where-Object Name -eq $_) })]
         [string]$OperatingSystem = "Ubuntu 20.04 x64",
         [Switch]$WaitForResponsiveness
     )
@@ -38,6 +38,7 @@ function New-VULTRInstance {
         Write-Host " - $(Get-Date) instance $($instance.instance.id) created..."
         if ( $WaitForResponsiveness ) {
             Wait-VULTRInstanceReady $instance.instance.id
+            $instance.instance.main_ip = Get-VULTRInstanceIp $instance.instance.id
         }
 
         $instance.instance
