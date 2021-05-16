@@ -2,3 +2,4 @@ coverage.xml
 apikey_for_tests.apikey
 vultr.apikey
 *.swp
+environment-documentation.json

@@ -26,11 +26,16 @@ function New-VULTRInstance {
     process {
         # translate the name of the OS into the id
         $OsId = (Get-VULTROperatingSystem | Where-Object Name -eq $OperatingSystem).id
+        $SshKey = (Get-VULTRSSHKey).id
 
         $data = @{
             region = $Region
             plan   = $Plan
             os_id  = $OsId
+        }
+
+        if ([bool]$SshKey) {
+            $data.sshkey_id = @($SshKey)
         }
         
         $instance = Invoke-VULTRAPI -ApiEndPoint "instances" -Data $data

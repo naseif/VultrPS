@@ -12,7 +12,7 @@ $operatingSystem = ((Get-VULTROperatingSystem) |
     Sort-Object id -Descending |
     Select-Object -First 1).name
 
-$low_performance_plan  = "vc2-1c-1gb"
+$low_performance_plan  = "vc2-4c-8gb"
 $high_performance_plan = "vc2-4c-8gb"
 
 $region = "fra"
@@ -36,7 +36,7 @@ $development.label = "Development Machine"
 $servers = $mailserver, $mysqlserver, $development
 $servers | ConvertTo-Json | Set-Content "environment-documentation.json" -Force
 
+Write-Host "Provisioning the systems..." -ForegroundColor Yellow
 
-
-
+Invoke-VULTRRemoteExecution -FilePath ./update-packages.sh -Instance $mailserver
 
