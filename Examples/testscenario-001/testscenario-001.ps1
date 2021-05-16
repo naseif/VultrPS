@@ -38,5 +38,5 @@ $servers | ConvertTo-Json | Set-Content "environment-documentation.json" -Force
 
 Write-Host "Provisioning the systems..." -ForegroundColor Yellow
 
-Invoke-VULTRRemoteExecution -Script ./update-packages.sh -Instance $mailserver
+Invoke-VULTRRemoteExecution -FilePath ./update-packages.sh -Instance $mailserver
 

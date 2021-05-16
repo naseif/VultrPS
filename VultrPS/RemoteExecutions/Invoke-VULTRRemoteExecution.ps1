@@ -12,6 +12,13 @@ function Invoke-VULTRRemoteExecution {
     )
 
     process {
-        Get-Content $FilePath | &ssh -i ~/.ssh/id_rsa $Instance.main_ip -l root -o "StrictHostKeyChecking no" 'bash -s'
+        Get-Content $FilePath | Foreach-Object {
+            $line = $_
+            if ( [bool]$line ) {
+                Write-Host "  - $(Get-Date) currently executing: " -ForegroundColor Cyan -NoNewline 
+                Write-Host "$line" -ForegroundColor Yellow
+                $line | &ssh -i ~/.ssh/id_rsa $Instance.main_ip -l root -o "StrictHostKeyChecking no" 'bash -s'
+            }
+        }
     }
 }
