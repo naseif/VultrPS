@@ -36,7 +36,9 @@ $development.label = "Development Machine"
 $servers = $mailserver, $mysqlserver, $development
 $servers | ConvertTo-Json | Set-Content "environment-documentation.json" -Force
 
+Write-Host "Provisioning the systems..." -ForegroundColor Yellow
 
+Get-Content update-packages.sh | &ssh -i ~/.ssh/id_rsa $mailserver.main_ip -l root -o "StrictHostKeyChecking no" 'bash -s'
 
 
 
