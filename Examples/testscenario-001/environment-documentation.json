@@ -1,16 +1,16 @@
 [
   {
-    "id": "509fe7c7-3504-4c03-9aa7-6f3d150bad87",
+    "id": "e0c8dac9-7235-42b2-aa55-59c55e5004fa",
     "os": "Ubuntu 21.04 x64",
-    "ram": 1024,
+    "ram": 8192,
     "disk": 0,
-    "main_ip": "45.76.88.52",
-    "vcpu_count": 1,
+    "main_ip": "45.76.91.94",
+    "vcpu_count": 4,
     "region": "fra",
-    "plan": "vc2-1c-1gb",
-    "date_created": "2021-05-16T11:31:24+02:00",
+    "plan": "vc2-4c-8gb",
+    "date_created": "2021-05-16T17:25:11+02:00",
     "status": "pending",
-    "allowed_bandwidth": 1000,
+    "allowed_bandwidth": 4000,
     "netmask_v4": "",
     "gateway_v4": "0.0.0.0",
     "power_status": "running",
@@ -26,20 +26,20 @@
     "app_id": 0,
     "firewall_group_id": "",
     "features": [],
-    "default_password": "Fx5_A(dDCf85f=kf"
+    "default_password": "$7EqnuPbqL@YsKx)"
   },
   {
-    "id": "23658f41-8eb2-45a3-bd92-bee19c28e224",
+    "id": "565620e8-83dd-407c-a813-0f37dcd692e7",
     "os": "Ubuntu 21.04 x64",
-    "ram": 1024,
+    "ram": 8192,
     "disk": 0,
-    "main_ip": "45.32.154.170",
-    "vcpu_count": 1,
+    "main_ip": "104.238.176.109",
+    "vcpu_count": 4,
     "region": "fra",
-    "plan": "vc2-1c-1gb",
-    "date_created": "2021-05-16T11:31:26+02:00",
+    "plan": "vc2-4c-8gb",
+    "date_created": "2021-05-16T17:25:13+02:00",
     "status": "pending",
-    "allowed_bandwidth": 1000,
+    "allowed_bandwidth": 4000,
     "netmask_v4": "",
     "gateway_v4": "0.0.0.0",
     "power_status": "running",
@@ -55,18 +55,18 @@
     "app_id": 0,
     "firewall_group_id": "",
     "features": [],
-    "default_password": "!7Gcs!QLQk1.5F2C"
+    "default_password": "3Q$t(BN(+DtJDLMH"
   },
   {
-    "id": "bb48910a-224a-408f-8052-2fabfa2a95b5",
+    "id": "66af050e-0eef-4e55-8202-e03a65264988",
     "os": "Ubuntu 21.04 x64",
     "ram": 8192,
     "disk": 0,
-    "main_ip": "199.247.4.142",
+    "main_ip": "192.248.189.124",
     "vcpu_count": 4,
     "region": "fra",
     "plan": "vc2-4c-8gb",
-    "date_created": "2021-05-16T11:31:29+02:00",
+    "date_created": "2021-05-16T17:25:16+02:00",
     "status": "pending",
     "allowed_bandwidth": 4000,
     "netmask_v4": "",
@@ -84,6 +84,6 @@
     "app_id": 0,
     "firewall_group_id": "",
     "features": [],
-    "default_password": "M3@gv,-Zg]-2VJXC"
+    "default_password": "y7Y,.fvvkLBw-1jo"
   }
 ]

@@ -12,7 +12,7 @@ $operatingSystem = ((Get-VULTROperatingSystem) |
     Sort-Object id -Descending |
     Select-Object -First 1).name
 
-$low_performance_plan  = "vc2-1c-1gb"
+$low_performance_plan  = "vc2-4c-8gb"
 $high_performance_plan = "vc2-4c-8gb"
 
 $region = "fra"
@@ -38,7 +38,5 @@ $servers | ConvertTo-Json | Set-Content "environment-documentation.json" -Force
 
 Write-Host "Provisioning the systems..." -ForegroundColor Yellow
 
-Get-Content update-packages.sh | &ssh -i ~/.ssh/id_rsa $mailserver.main_ip -l root -o "StrictHostKeyChecking no" 'bash -s'
-
-
+Invoke-VULTRRemoteExecution -Script ./update-packages.sh -Instance $mailserver
 
