@@ -19,39 +19,35 @@ function New-VULTRInstance {
             })]
         [ValidateScript( { ((Get-VULTROperatingSystem) | Where-Object Name -eq $_) })]
         [string]$OperatingSystem = "Ubuntu 20.04 x64",
-        [ArgumentCompleter({
-                param( $CommandName, $ParameterName, $WordToComplete, $CommandAst, $FakeBoundParameters )
-                $temp = $WordToComplete.Replace('"', '')
-                $path = Join-Path $PSScriptRoot ../ProvisioningScripts
-                (Get-ChildItem $Path) | 
-                    Where-Object Name -like "*$temp*" | 
-                    Foreach-Object {
-                        $file = $_.Name
-                        '"' + $file + '"'
-                }
-            })]
-        [ValidateScript({ 
-            $path = Join-Path $PSScriptRoot ../ProvisioningScripts
-            ((Get-ChildItem $Path) | Where-Object Name -eq $_) 
-        })]
         [string]$ProvisionUsingScript,
+        [string]$label,
+        [string]$hostname,
         [Switch]$WaitForResponsiveness
     )
 
-    
     process {
         # translate the name of the OS into the id
         $OsId = (Get-VULTROperatingSystem | Where-Object Name -eq $OperatingSystem).id
         $SshKey = (Get-VULTRSSHKey).id
 
-        if ([bool] $ProvisionUsingScript) {
-            $WaitForResponsiveness = $true
-        }
-
         $data = @{
             region = $Region
             plan   = $Plan
             os_id  = $OsId
+        }
+
+        if ([bool] $ProvisionUsingScript) {
+            $WaitForResponsiveness = $true
+            $script = New-VULTRStartupScript -name "VultrPS-temp" -type boot -ScriptCode $ProvisionUsingScript
+            $data.script_id = $script.id
+        }
+
+        if ([bool]$label) {
+            $data.label = $label
+        }
+        
+        if ([bool]$hostname) {
+            $data.hostname = $hostname
         }
 
         if ([bool]$SshKey) {
@@ -65,11 +61,8 @@ function New-VULTRInstance {
             Wait-VULTRInstanceReady $instance.instance.id
             $instance.instance.main_ip = Get-VULTRInstanceIp $instance.instance.id
 
-            if ( [bool]$ProvisionUsingScript ) {
-                $path = Join-Path $PSScriptRoot ../ProvisioningScripts
-                $path = Join-Path $path $ProvisionUsingScript
-
-                Invoke-VULTRRemoteExecution -FilePath $path -Instance $instance.instance
+            if ([bool]$ProvisionUsingScript) {
+                Remove-VULTRStartupScript -StartupScriptId $script.id
             }
         }
 

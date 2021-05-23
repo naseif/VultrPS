@@ -10,7 +10,9 @@ function Get-VULTRStartupScript {
     
     process {
         if ([bool]$StartupScriptId) {
-            (Get-VULTRAPI "startup-scripts/$StartupScriptId").startup_script
+            $temp = (Get-VULTRAPI "startup-scripts/$StartupScriptId").startup_script
+            $temp.script = [System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($temp.script))
+            $temp 
         }
         else {
             (Get-VULTRAPI "startup-scripts").startup_scripts
