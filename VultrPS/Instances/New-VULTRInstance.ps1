@@ -58,11 +58,11 @@ function New-VULTRInstance {
 
         Write-Host " - $(Get-Date) instance $($instance.instance.id) created..."
         if ( $WaitForResponsiveness ) {
-            Wait-VULTRInstanceReady $instance.instance.id
+            Wait-VULTRInstanceReady $instance.instance.id | Out-Null
             $instance.instance.main_ip = Get-VULTRInstanceIp $instance.instance.id
 
             if ([bool]$ProvisionUsingScript) {
-                Remove-VULTRStartupScript -StartupScriptId $script.id
+                Remove-VULTRStartupScript -StartupScriptId $script.id | Out-Null
             }
         }
 
