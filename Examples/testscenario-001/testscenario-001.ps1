@@ -12,31 +12,51 @@ $operatingSystem = ((Get-VULTROperatingSystem) |
     Sort-Object id -Descending |
     Select-Object -First 1).name
 
-$low_performance_plan  = "vc2-4c-8gb"
-$high_performance_plan = "vc2-4c-8gb"
+$installMailserver = "
+#!/bin/bash
 
-$region = "fra"
+apt-get install golang-go
+go get github.com/mailhog/MailHog
+"
+$mailserver  = New-VULTRInstance -hostname "Mail" -WaitForResponsiveness -ProvisionUsingScript $installMailserver
 
-$mailserver  = New-VULTRInstance -OperatingSystem $operatingSystem -Plan $low_performance_plan -Region $region
-$mysqlserver = New-VULTRInstance -OperatingSystem $operatingSystem -Plan $low_performance_plan -Region $region
-$development = New-VULTRInstance -OperatingSystem $operatingSystem -Plan $high_performance_plan -Region $region
+$installMySQL = "apt-get install mysql -y"
+$mysqlserver = New-VULTRInstance -ProvisionUsingScript $installMySQL -hostname "Database" -label "Database" -WaitForResponsiveness
 
-Wait-VULTRInstanceReady $mailserver.id
-Wait-VULTRInstanceReady $mysqlserver.id
-Wait-VULTRInstanceReady $development.id
+$password = New-VULTRRandomPassword
 
-$mailserver.main_ip  = Get-VULTRInstanceIp $mailserver.id
-$mysqlserver.main_ip = Get-VULTRInstanceIp $mysqlserver.id
-$development.main_ip = Get-VULTRInstanceIp $development.id
+$developmentScript = "
+#!/bin/bash
 
-$mailserver.label  = "Mailserver"
-$mysqlserver.label = "MySQLServer"
-$development.label = "Development Machine"
+apt update
+apt-get upgrade -y
+export DEBIAN_FRONTEND=noninteractive
+apt-get install xubuntu-core -y
+apt-get install x2goserver x2goserver-xsession -y
 
-$servers = $mailserver, $mysqlserver, $development
-$servers | ConvertTo-Json | Set-Content "environment-documentation.json" -Force
+snap install --classic code
+snap install --classic dotnet-sdk
+snap install --classic rider
 
-Write-Host "Provisioning the systems..." -ForegroundColor Yellow
+useradd developer -d /home/developer -m 
+echo -e `"$password\n$password`" | passwd developer
+usermod --shell /bin/bash developer
+usermod -aG sudo developer
 
-Invoke-VULTRRemoteExecution -FilePath ./update-packages.sh -Instance $mailserver
+echo 'export DOTNET_ROOT=`"/snap/dotnet-sdk/current`"' >> /home/developer/.bashrc
+"
+
+$development = New-VULTRInstance -hostname "Dev" -label "Dev" -ProvisionUsingScript $developmentScript -WaitForResponsiveness 
+
+$documentation = New-Object -TypeName PSObject -Property @{
+    Servers = $mailserver, $mysqlserver, $development
+    DevPassword = $password
+}
+$documentation | ConvertTo-Json | Set-Content "environment-documentation.json" -Force
+
+Write-Host "-----------------------------------------------------" -ForegroundColor Yellow
+Write-Host "Developer Password is : $password" -ForegroundColor Yellow
+Write-Host "-----------------------------------------------------" -ForegroundColor Yellow
+Write-Host ""
+
 

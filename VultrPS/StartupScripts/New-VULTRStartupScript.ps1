@@ -15,10 +15,13 @@ function New-VULTRStartupScript {
     )
     
     process {
+        $script = [System.Text.Encoding]::UTF8.GetBytes($ScriptCode)
+        $scriptbase64 = [Convert]::ToBase64String($script)
+
         $data = @{
             name = $name
             type = $type
-            script = [System.Text.Encoding]::UTF8.GetBytes($ScriptCode)
+            script = $scriptbase64
         }
         
         $script = Invoke-VULTRAPI -ApiEndPoint "startup-scripts" -Data $data -method "Post"
